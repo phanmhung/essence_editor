@@ -945,9 +945,7 @@ export default class Editor extends Component {
           if (source.detail.type === 'ActivitySpace') {
             graph.getModel().remove(edge);
 
-            alert(
-              'Activity Space tidak boleh mengarah ke essence kernel manapun'
-            );
+            alert('Activity Space cannot point to any kernel essence');
           }
 
           if (
@@ -968,7 +966,7 @@ export default class Editor extends Component {
           ) {
             graph.getModel().remove(edge);
 
-            alert('Competency dan Work Product tidak boleh saling terhubung');
+            alert('Competency and Work Product cannot be interconnected');
           }
 
           // console.log('connect '+ edge +' '+ source.id+' '+target.id+' '+sourcePortId+' '+ targetPortId);
@@ -980,7 +978,7 @@ export default class Editor extends Component {
           ) {
             graph.getModel().remove(edge);
 
-            alert('Competency dan Activity Space tidak boleh saling terhubung');
+            alert('Competency and Activity Space cannot be interconnected');
           }
 
           if (
@@ -992,7 +990,7 @@ export default class Editor extends Component {
             graph.getModel().remove(edge);
 
             alert(
-              'WorkProduct dan Activity Space tidak boleh saling terhubung'
+              'WorkProduct and Activity Space cannot be connected to each other'
             );
           }
 
@@ -1002,7 +1000,7 @@ export default class Editor extends Component {
           ) {
             graph.getModel().remove(edge);
 
-            alert('Activity tidak boleh mengarah ke Competency');
+            alert('Activity cannot lead to Competency');
           }
 
           if (
