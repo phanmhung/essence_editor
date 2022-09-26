@@ -1,57 +1,89 @@
-import Button from '@material-ui/core/Button/Button';
-import Modal from '@material-ui/core/Modal/Modal';
+import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
 import {
+  mxGraph,
+  mxRubberband,
+  mxKeyHandler,
+  mxUndoManager,
   mxClient,
+  mxUtils,
+  mxPerimeter,
   mxConnectionHandler,
   mxConstants,
   mxEvent,
-  mxGraph,
-  mxKeyHandler,
-  mxPerimeter,
-  mxRubberband,
-  mxUndoManager,
-  mxUtils,
 } from 'mxgraph-js';
-import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
-import ActivityPng from '../../Assets/EssenceKernel/Activity.png';
-import ActivityCustomerPng from '../../Assets/EssenceKernel/Activity_Customer.png';
-import ActivityEndeavorPng from '../../Assets/EssenceKernel/Activity_Endeavor.png';
-import ActivitySolutionPng from '../../Assets/EssenceKernel/Activity_Solution.png';
-import ActivitySpacePng from '../../Assets/EssenceKernel/Activity_Space.png';
-import ActivitySpaceCustomerPng from '../../Assets/EssenceKernel/Activity_Space_Customer.png';
-import ActivitySpaceEndeavorPng from '../../Assets/EssenceKernel/Activity_Space_Endeavor.png';
-import ActivitySpaceSolutionPng from '../../Assets/EssenceKernel/Activity_Space_Solution.png';
 import Alpha from '../../Assets/EssenceKernel/Alpha.png';
-import AlphaCustomerPng from '../../Assets/EssenceKernel/Alpha_Customer.png';
-import AlphaEndeavorPng from '../../Assets/EssenceKernel/Alpha_Endeavor.png';
-import AlphaSolutionPng from '../../Assets/EssenceKernel/Alpha_Solution.png';
+import ActivityPng from '../../Assets/EssenceKernel/Activity.png';
+import ActivitySpacePng from '../../Assets/EssenceKernel/Activity_Space.png';
 import CompetencyPng from '../../Assets/EssenceKernel/Competency.png';
-import CompetencyCustomerPng from '../../Assets/EssenceKernel/Competency_Customer.png';
-import CompetencyEndeavorPng from '../../Assets/EssenceKernel/Competency_Endeavor.png';
-import CompetencySolutionPng from '../../Assets/EssenceKernel/Competency_Solution.png';
 import WorkProductPng from '../../Assets/EssenceKernel/Work_Product.png';
-import WorkProductCustomerPng from '../../Assets/EssenceKernel/Work_Product_Customer.png';
+import AlphaEndeavorPng from '../../Assets/EssenceKernel/Alpha_Endeavor.png';
+import ActivityEndeavorPng from '../../Assets/EssenceKernel/Activity_Endeavor.png';
+import ActivitySpaceEndeavorPng from '../../Assets/EssenceKernel/Activity_Space_Endeavor.png';
+import CompetencyEndeavorPng from '../../Assets/EssenceKernel/Competency_Endeavor.png';
 import WorkProductEndeavorPng from '../../Assets/EssenceKernel/Work_Product_Endeavor.png';
+import AlphaCustomerPng from '../../Assets/EssenceKernel/Alpha_Customer.png';
+import ActivityCustomerPng from '../../Assets/EssenceKernel/Activity_Customer.png';
+import ActivitySpaceCustomerPng from '../../Assets/EssenceKernel/Activity_Space_Customer.png';
+import CompetencyCustomerPng from '../../Assets/EssenceKernel/Competency_Customer.png';
+import WorkProductCustomerPng from '../../Assets/EssenceKernel/Work_Product_Customer.png';
+import AlphaSolutionPng from '../../Assets/EssenceKernel/Alpha_Solution.png';
+import ActivitySolutionPng from '../../Assets/EssenceKernel/Activity_Solution.png';
+import ActivitySpaceSolutionPng from '../../Assets/EssenceKernel/Activity_Space_Solution.png';
+import CompetencySolutionPng from '../../Assets/EssenceKernel/Competency_Solution.png';
 import WorkProductSolutionPng from '../../Assets/EssenceKernel/Work_Product_Solution.png';
-import KernelDetail from '../../Component/kernelDetail/KernelDetail';
-import './Editor.css';
 
+import KernelDetail from '../../Component/kernelDetail/KernelDetail';
+import Modal from '@material-ui/core/Modal/Modal';
 import {
+  Button,
   AppBar,
-  CssBaseline,
+  Toolbar,
   Drawer,
+  CssBaseline,
   List,
   ListItem,
-  Toolbar,
+  Typography,
+  Link,
 } from '@material-ui/core';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
-
-// Serialize and deserialize otherwise valid JSON objects containing circular references
+import { withStyles } from '@material-ui/core';
+import Background from '../../Assets/paper-background.jpg';
 const CircularJSON = require('circular-json');
 
-export default class Editor extends Component {
+const drawerWidth = 200;
+
+const styles = (theme) => ({
+  root: {
+    display: 'flex',
+  },
+  appBar: {
+    zIndex: theme.zIndex.drawer + 1,
+  },
+  logo: {
+    marginRight: theme.spacing.unit * 6,
+  },
+  btn: {
+    marginRight: theme.spacing.unit * 2,
+  },
+  drawer: {
+    width: drawerWidth,
+    flexShrink: 0,
+  },
+  drawerPaper: {
+    width: drawerWidth,
+  },
+  graphContainer: {
+    backgroundImage: `url(${Background})`,
+  },
+  toolbar: theme.mixins.toolbar,
+  content: {
+    flexGrow: 1,
+    padding: theme.spacing.unit * 3,
+  },
+});
+
+class Editor extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -78,7 +110,7 @@ export default class Editor extends Component {
     this.saveData = this.saveData.bind(this);
     this.stringifyWithoutCircular = this.stringifyWithoutCircular.bind(this);
 
-    // console.log(this.props.match.params.id);
+    console.log(this.props.match.params.id);
 
     axios
       .get('http://localhost:8085/method/' + this.props.match.params.id)
@@ -139,8 +171,6 @@ export default class Editor extends Component {
   }
 
   saveData() {
-    var util = require('util');
-
     var essence_kernel_data = JSON.parse(
       this.stringifyWithoutCircular(this.state.essence_kernel)
     );
@@ -673,7 +703,7 @@ export default class Editor extends Component {
       // graph.splitEnabled = false;
 
       //Activity Style
-      var Activity = new Object();
+      var Activity = {};
       Activity[mxConstants.STYLE_SHAPE] = mxConstants.STYLE_IMAGE;
       Activity[mxConstants.STYLE_IMAGE] = ActivityPng;
       Activity[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
@@ -681,7 +711,7 @@ export default class Editor extends Component {
         .getStylesheet()
         .putCellStyle('Activity', Activity);
 
-      var ActivityEndeavor = new Object();
+      var ActivityEndeavor = {};
       ActivityEndeavor[mxConstants.STYLE_SHAPE] = mxConstants.STYLE_IMAGE;
       ActivityEndeavor[mxConstants.STYLE_IMAGE] = ActivityEndeavorPng;
       ActivityEndeavor[mxConstants.STYLE_PERIMETER] =
@@ -690,7 +720,7 @@ export default class Editor extends Component {
         .getStylesheet()
         .putCellStyle('ActivityEndeavor', ActivityEndeavor);
 
-      var ActivityCustomer = new Object();
+      var ActivityCustomer = {};
       ActivityCustomer[mxConstants.STYLE_SHAPE] = mxConstants.STYLE_IMAGE;
       ActivityCustomer[mxConstants.STYLE_IMAGE] = ActivityCustomerPng;
       ActivityCustomer[mxConstants.STYLE_PERIMETER] =
@@ -699,7 +729,7 @@ export default class Editor extends Component {
         .getStylesheet()
         .putCellStyle('ActivityCustomer', ActivityCustomer);
 
-      var ActivitySolution = new Object();
+      var ActivitySolution = {};
       ActivitySolution[mxConstants.STYLE_SHAPE] = mxConstants.STYLE_IMAGE;
       ActivitySolution[mxConstants.STYLE_IMAGE] = ActivitySolutionPng;
       ActivitySolution[mxConstants.STYLE_PERIMETER] =
@@ -710,7 +740,7 @@ export default class Editor extends Component {
 
       //Activity Space Style
 
-      var ActivitySpace = new Object();
+      var ActivitySpace = {};
       ActivitySpace[mxConstants.STYLE_SHAPE] = mxConstants.STYLE_IMAGE;
       ActivitySpace[mxConstants.STYLE_IMAGE] = ActivitySpacePng;
       ActivitySpace[mxConstants.STYLE_PERIMETER] =
@@ -719,7 +749,7 @@ export default class Editor extends Component {
         .getStylesheet()
         .putCellStyle('ActivitySpace', ActivitySpace);
 
-      var ActivitySpaceEndeavor = new Object();
+      var ActivitySpaceEndeavor = {};
       ActivitySpaceEndeavor[mxConstants.STYLE_SHAPE] = mxConstants.STYLE_IMAGE;
       ActivitySpaceEndeavor[mxConstants.STYLE_IMAGE] = ActivitySpaceEndeavorPng;
       ActivitySpaceEndeavor[mxConstants.STYLE_PERIMETER] =
@@ -728,7 +758,7 @@ export default class Editor extends Component {
         .getStylesheet()
         .putCellStyle('ActivitySpaceEndeavor', ActivitySpaceEndeavor);
 
-      var ActivitySpaceCustomer = new Object();
+      var ActivitySpaceCustomer = {};
       ActivitySpaceCustomer[mxConstants.STYLE_SHAPE] = mxConstants.STYLE_IMAGE;
       ActivitySpaceCustomer[mxConstants.STYLE_IMAGE] = ActivitySpaceCustomerPng;
       ActivitySpaceCustomer[mxConstants.STYLE_PERIMETER] =
@@ -737,7 +767,7 @@ export default class Editor extends Component {
         .getStylesheet()
         .putCellStyle('ActivitySpaceCustomer', ActivitySpaceCustomer);
 
-      var ActivitySpaceSolution = new Object();
+      var ActivitySpaceSolution = {};
       ActivitySpaceSolution[mxConstants.STYLE_SHAPE] = mxConstants.STYLE_IMAGE;
       ActivitySpaceSolution[mxConstants.STYLE_IMAGE] = ActivitySpaceSolutionPng;
       ActivitySpaceSolution[mxConstants.STYLE_PERIMETER] =
@@ -748,7 +778,7 @@ export default class Editor extends Component {
 
       //Competency Style
 
-      var Competency = new Object();
+      var Competency = {};
       Competency[mxConstants.STYLE_SHAPE] = mxConstants.STYLE_IMAGE;
       Competency[mxConstants.STYLE_IMAGE] = CompetencyPng;
       Competency[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
@@ -756,7 +786,7 @@ export default class Editor extends Component {
         .getStylesheet()
         .putCellStyle('Competency', Competency);
 
-      var CompetencyEndeavor = new Object();
+      var CompetencyEndeavor = {};
       CompetencyEndeavor[mxConstants.STYLE_SHAPE] = mxConstants.STYLE_IMAGE;
       CompetencyEndeavor[mxConstants.STYLE_IMAGE] = CompetencyEndeavorPng;
       CompetencyEndeavor[mxConstants.STYLE_PERIMETER] =
@@ -765,7 +795,7 @@ export default class Editor extends Component {
         .getStylesheet()
         .putCellStyle('CompetencyEndeavor', CompetencyEndeavor);
 
-      var CompetencyCustomer = new Object();
+      var CompetencyCustomer = {};
       CompetencyCustomer[mxConstants.STYLE_SHAPE] = mxConstants.STYLE_IMAGE;
       CompetencyCustomer[mxConstants.STYLE_IMAGE] = CompetencyCustomerPng;
       CompetencyCustomer[mxConstants.STYLE_PERIMETER] =
@@ -774,7 +804,7 @@ export default class Editor extends Component {
         .getStylesheet()
         .putCellStyle('CompetencyCustomer', CompetencyCustomer);
 
-      var CompetencySolution = new Object();
+      var CompetencySolution = {};
       CompetencySolution[mxConstants.STYLE_SHAPE] = mxConstants.STYLE_IMAGE;
       CompetencySolution[mxConstants.STYLE_IMAGE] = CompetencySolutionPng;
       CompetencySolution[mxConstants.STYLE_PERIMETER] =
@@ -785,7 +815,7 @@ export default class Editor extends Component {
 
       //Work Product Style
 
-      var WorkProduct = new Object();
+      var WorkProduct = {};
       WorkProduct[mxConstants.STYLE_SHAPE] = mxConstants.STYLE_IMAGE;
       WorkProduct[mxConstants.STYLE_IMAGE] = WorkProductPng;
       WorkProduct[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
@@ -793,7 +823,7 @@ export default class Editor extends Component {
         .getStylesheet()
         .putCellStyle('WorkProduct', WorkProduct);
 
-      var WorkProductEndeavor = new Object();
+      var WorkProductEndeavor = {};
       WorkProductEndeavor[mxConstants.STYLE_SHAPE] = mxConstants.STYLE_IMAGE;
       WorkProductEndeavor[mxConstants.STYLE_IMAGE] = WorkProductEndeavorPng;
       WorkProductEndeavor[mxConstants.STYLE_PERIMETER] =
@@ -802,7 +832,7 @@ export default class Editor extends Component {
         .getStylesheet()
         .putCellStyle('WorkProductEndeavor', WorkProductEndeavor);
 
-      var WorkProductCustomer = new Object();
+      var WorkProductCustomer = {};
       WorkProductCustomer[mxConstants.STYLE_SHAPE] = mxConstants.STYLE_IMAGE;
       WorkProductCustomer[mxConstants.STYLE_IMAGE] = WorkProductCustomerPng;
       WorkProductCustomer[mxConstants.STYLE_PERIMETER] =
@@ -811,7 +841,7 @@ export default class Editor extends Component {
         .getStylesheet()
         .putCellStyle('WorkProductCustomer', WorkProductCustomer);
 
-      var WorkProductSolution = new Object();
+      var WorkProductSolution = {};
       WorkProductSolution[mxConstants.STYLE_SHAPE] = mxConstants.STYLE_IMAGE;
       WorkProductSolution[mxConstants.STYLE_IMAGE] = WorkProductSolutionPng;
       WorkProductSolution[mxConstants.STYLE_PERIMETER] =
@@ -822,13 +852,13 @@ export default class Editor extends Component {
 
       //Alpha style
 
-      var Alphastyle = new Object();
+      var Alphastyle = {};
       Alphastyle[mxConstants.STYLE_SHAPE] = mxConstants.STYLE_IMAGE;
       Alphastyle[mxConstants.STYLE_IMAGE] = Alpha;
       Alphastyle[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
       this.state.graph_global.getStylesheet().putCellStyle('Alpha', Alphastyle);
 
-      var AlphaEndeavor = new Object();
+      var AlphaEndeavor = {};
       AlphaEndeavor[mxConstants.STYLE_SHAPE] = mxConstants.STYLE_IMAGE;
       AlphaEndeavor[mxConstants.STYLE_IMAGE] = AlphaEndeavorPng;
       AlphaEndeavor[mxConstants.STYLE_PERIMETER] =
@@ -837,7 +867,7 @@ export default class Editor extends Component {
         .getStylesheet()
         .putCellStyle('AlphaEndeavor', AlphaEndeavor);
 
-      var AlphaCustomer = new Object();
+      var AlphaCustomer = {};
       AlphaCustomer[mxConstants.STYLE_SHAPE] = mxConstants.STYLE_IMAGE;
       AlphaCustomer[mxConstants.STYLE_IMAGE] = AlphaCustomerPng;
       AlphaCustomer[mxConstants.STYLE_PERIMETER] =
@@ -846,7 +876,7 @@ export default class Editor extends Component {
         .getStylesheet()
         .putCellStyle('AlphaCustomer', AlphaCustomer);
 
-      var AlphaSolution = new Object();
+      var AlphaSolution = {};
       AlphaSolution[mxConstants.STYLE_SHAPE] = mxConstants.STYLE_IMAGE;
       AlphaSolution[mxConstants.STYLE_IMAGE] = AlphaSolutionPng;
       AlphaSolution[mxConstants.STYLE_PERIMETER] =
@@ -949,11 +979,11 @@ export default class Editor extends Component {
 
           if (
             target.detail.type === 'WorkProduct' &&
-            source.detail.type != 'Activity'
+            source.detail.type !== 'Activity'
           ) {
             graph.getModel().remove(edge);
 
-            alert('Only Activity can lead to work product');
+            alert('Only Activity can lead to a Work Product');
           }
           //Constrain Untuk Competency
           // console.log('connect '+ edge +' '+ source.id+' '+target.id+' '+sourcePortId+' '+ targetPortId);
@@ -989,7 +1019,7 @@ export default class Editor extends Component {
             graph.getModel().remove(edge);
 
             alert(
-              'WorkProduct and Activity Space cannot be connected to each other'
+              'WorkProduct dan Activity Space tidak boleh saling terhubung'
             );
           }
 
@@ -1087,7 +1117,7 @@ export default class Editor extends Component {
           ) {
             graph.getModel().remove(edge);
 
-            alert('Competency must not be connected with other Competencies');
+            alert('Competency cannot be interconnected with fellow Competency');
           }
 
           if (
@@ -1096,7 +1126,7 @@ export default class Editor extends Component {
           ) {
             graph.getModel().remove(edge);
 
-            alert('Activities cannot be connected to other Activities');
+            alert('Activities cannot be interconnected with other Activities');
           }
 
           if (
@@ -1106,7 +1136,7 @@ export default class Editor extends Component {
             graph.getModel().remove(edge);
 
             alert(
-              'Activity Space must not be connected to other Activity Spaces'
+              'Activity Space cannot be interconnected with other Activity Space'
             );
           }
 
@@ -1154,7 +1184,7 @@ export default class Editor extends Component {
           ) {
             graph.getModel().remove(edge);
 
-            alert('Competency and Alpha cannot be connected');
+            alert('Competency and Alpha cannot be interconnected');
           }
 
           if (
@@ -1207,7 +1237,7 @@ export default class Editor extends Component {
             } else if (sourceAlpha.detail.hasSubAlpha) {
               graph.getModel().remove(edge);
 
-              alert('Alpha already has sub Alpha');
+              alert('Alpha already has a sub Alpha');
             } else {
               sourceAlpha.detail.isSubAlpha = true;
               targetAlpha.detail.hasSubAlpha = true;
@@ -1264,7 +1294,7 @@ export default class Editor extends Component {
           state.essence_kernel = state.essence_kernel.filter(function (ele) {
             return ele.id !== kernel.id;
           });
-          if (kernel.detail.type == 'Competency') {
+          if (kernel.detail.type === 'Competency') {
             let as = state.essence_kernel.filter(function (ele) {
               return ele.detail.type === 'Activity';
             });
@@ -1347,7 +1377,6 @@ export default class Editor extends Component {
           graph.getModel().beginUpdate();
 
           try {
-            //let editedCell = new mxCell(null,geometry,graph.getSelectionCell().getStyle());
             graph.translateCell(graph.getSelectionCell(), -10, 0);
           } catch (e) {
             console.log(e);
@@ -1428,11 +1457,16 @@ export default class Editor extends Component {
           <CssBaseline />
           <AppBar position="fixed" className={classes.appBar}>
             <Toolbar>
-              <h4 variant="h6" color="inherit" noWrap className={classes.logo}>
+              <Typography
+                variant="h6"
+                color="inherit"
+                noWrap
+                className={classes.logo}
+              >
                 <Link href="/" color="inherit">
                   Essence editor
                 </Link>
-              </h4>
+              </Typography>
               <Button
                 variant="contained"
                 onClick={this.toJSON}
@@ -1503,3 +1537,4 @@ export default class Editor extends Component {
     }
   }
 }
+export default withStyles(styles, { withTheme: true })(Editor);
