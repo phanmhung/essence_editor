@@ -1,12 +1,11 @@
-import React, { Component } from 'react';
-import { withStyles } from '@material-ui/core/styles'
-import Grid from '@material-ui/core/Grid'
-import logo from "../../essence.png";
-import Modal from '@material-ui/core/Modal';
-import NewMethod from './../../Component/newMethod/NewMethod'
 import Button from '@material-ui/core/Button';
-import {Redirect} from "react-router-dom";
-import EssenceAPI from "./../../Api/EssenceAPI"
+import Grid from '@material-ui/core/Grid';
+import Modal from '@material-ui/core/Modal';
+import { withStyles } from '@material-ui/core/styles';
+import React, { Component } from 'react';
+import logo from "../../the_book_0.png";
+import EssenceAPI from "./../../Api/EssenceAPI";
+import NewMethod from './../../Component/newMethod/NewMethod';
 // import from '@material-ui'
 
 

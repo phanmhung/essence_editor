@@ -1,55 +1,54 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import ReactDOM from 'react-dom';
+import Button from '@material-ui/core/Button/Button';
+import Modal from '@material-ui/core/Modal/Modal';
 import {
-  mxGraph,
-  mxRubberband,
-  mxKeyHandler,
-  mxUndoManager,
-  mxEditor,
-  mxEdgeHandler,
-  mxVertexHandler,
-  mxConnectionHandler,
-  mxCell,
   mxClient,
-  mxUtils,
-  mxStylesheet,
-  mxPerimeter,
+  mxConnectionHandler,
   mxConstants,
-  mxToolbar,
   mxEvent,
+  mxGraph,
+  mxKeyHandler,
+  mxPerimeter,
+  mxRubberband,
+  mxUndoManager,
+  mxUtils,
 } from 'mxgraph-js';
-import SideBar from './../../Component/sideBar/SideBar';
-import './Editor.css';
-import { black } from 'ansi-colors';
-import Json from '../../Assets/Action/json_icon.png';
-import SaveIcon from '../../Assets/Action/save.png';
-import Alpha from '../../Assets/EssenceKernel/Alpha.png';
+import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
 import ActivityPng from '../../Assets/EssenceKernel/Activity.png';
-import ActivitySpacePng from '../../Assets/EssenceKernel/Activity_Space.png';
-import CompetencyPng from '../../Assets/EssenceKernel/Competency.png';
-import WorkProductPng from '../../Assets/EssenceKernel/Work_Product.png';
-import AlphaEndeavorPng from '../../Assets/EssenceKernel/Alpha_Endeavor.png';
-import ActivityEndeavorPng from '../../Assets/EssenceKernel/Activity_Endeavor.png';
-import ActivitySpaceEndeavorPng from '../../Assets/EssenceKernel/Activity_Space_Endeavor.png';
-import CompetencyEndeavorPng from '../../Assets/EssenceKernel/Competency_Endeavor.png';
-import WorkProductEndeavorPng from '../../Assets/EssenceKernel/Work_Product_Endeavor.png';
-import AlphaCustomerPng from '../../Assets/EssenceKernel/Alpha_Customer.png';
 import ActivityCustomerPng from '../../Assets/EssenceKernel/Activity_Customer.png';
-import ActivitySpaceCustomerPng from '../../Assets/EssenceKernel/Activity_Space_Customer.png';
-import CompetencyCustomerPng from '../../Assets/EssenceKernel/Competency_Customer.png';
-import WorkProductCustomerPng from '../../Assets/EssenceKernel/Work_Product_Customer.png';
-import AlphaSolutionPng from '../../Assets/EssenceKernel/Alpha_Solution.png';
+import ActivityEndeavorPng from '../../Assets/EssenceKernel/Activity_Endeavor.png';
 import ActivitySolutionPng from '../../Assets/EssenceKernel/Activity_Solution.png';
+import ActivitySpacePng from '../../Assets/EssenceKernel/Activity_Space.png';
+import ActivitySpaceCustomerPng from '../../Assets/EssenceKernel/Activity_Space_Customer.png';
+import ActivitySpaceEndeavorPng from '../../Assets/EssenceKernel/Activity_Space_Endeavor.png';
 import ActivitySpaceSolutionPng from '../../Assets/EssenceKernel/Activity_Space_Solution.png';
+import Alpha from '../../Assets/EssenceKernel/Alpha.png';
+import AlphaCustomerPng from '../../Assets/EssenceKernel/Alpha_Customer.png';
+import AlphaEndeavorPng from '../../Assets/EssenceKernel/Alpha_Endeavor.png';
+import AlphaSolutionPng from '../../Assets/EssenceKernel/Alpha_Solution.png';
+import CompetencyPng from '../../Assets/EssenceKernel/Competency.png';
+import CompetencyCustomerPng from '../../Assets/EssenceKernel/Competency_Customer.png';
+import CompetencyEndeavorPng from '../../Assets/EssenceKernel/Competency_Endeavor.png';
 import CompetencySolutionPng from '../../Assets/EssenceKernel/Competency_Solution.png';
+import WorkProductPng from '../../Assets/EssenceKernel/Work_Product.png';
+import WorkProductCustomerPng from '../../Assets/EssenceKernel/Work_Product_Customer.png';
+import WorkProductEndeavorPng from '../../Assets/EssenceKernel/Work_Product_Endeavor.png';
 import WorkProductSolutionPng from '../../Assets/EssenceKernel/Work_Product_Solution.png';
 import KernelDetail from '../../Component/kernelDetail/KernelDetail';
-import Modal from '@material-ui/core/Modal/Modal';
-import Button from '@material-ui/core/Button/Button';
+import './Editor.css';
 
+import {
+  AppBar,
+  CssBaseline,
+  Drawer,
+  List,
+  ListItem,
+  Toolbar,
+} from '@material-ui/core';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
+// Serialize and deserialize otherwise valid JSON objects containing circular references
 const CircularJSON = require('circular-json');
 
 export default class Editor extends Component {
@@ -1422,36 +1421,68 @@ export default class Editor extends Component {
   }
 
   render() {
+    const { classes } = this.props;
     if (!this.state.loading) {
       return (
-        <div className="Background">
-          <div className="topnav">
-            <button onClick={this.toJSON}>
-              <img src={Json} />
-            </button>
-            <button onClick={this.saveData}>
-              <img src={SaveIcon} />
-            </button>
-          </div>
-          <div className="sidenav">
-            <button onClick={this.addAlpha}>
-              <img src={Alpha} />
-            </button>
-            <button onClick={this.addActivity}>
-              <img src={ActivityPng} />
-            </button>
-            <button onClick={this.addActivitySpace}>
-              <img src={ActivitySpacePng} />
-            </button>
-            <button onClick={this.addCompetency}>
-              <img src={CompetencyPng} />
-            </button>
-            <button onClick={this.addWorkProduct}>
-              <img src={WorkProductPng} />
-            </button>
-          </div>
-          <div className="Base">
-            <div className="graph-container" ref="divGraph" id="divGraph" />
+        <div className={classes.root}>
+          <CssBaseline />
+          <AppBar position="fixed" className={classes.appBar}>
+            <Toolbar>
+              <h4 variant="h6" color="inherit" noWrap className={classes.logo}>
+                <Link href="/" color="inherit">
+                  Essence editor
+                </Link>
+              </h4>
+              <Button
+                variant="contained"
+                onClick={this.toJSON}
+                className={classes.btn}
+              >
+                Export to JSON...
+              </Button>
+              <Button
+                variant="contained"
+                onClick={this.saveData}
+                className={classes.btn}
+              >
+                Save to DB
+              </Button>
+            </Toolbar>
+          </AppBar>
+
+          <Drawer
+            className={classes.drawer}
+            variant="permanent"
+            classes={{
+              paper: classes.drawerPaper,
+            }}
+          >
+            <div className={classes.toolbar} />
+            <List>
+              <ListItem button onClick={this.addAlpha}>
+                <img src={Alpha} alt="" />
+              </ListItem>
+              <ListItem button onClick={this.addActivity}>
+                <img src={ActivityPng} alt="" />
+              </ListItem>
+              <ListItem button onClick={this.addActivitySpace}>
+                <img src={ActivitySpacePng} alt="" />
+              </ListItem>
+              <ListItem button onClick={this.addCompetency}>
+                <img src={CompetencyPng} alt="" />
+              </ListItem>
+              <ListItem button onClick={this.addWorkProduct}>
+                <img src={WorkProductPng} alt="" />
+              </ListItem>
+            </List>
+          </Drawer>
+          <div className={classes.content}>
+            <div className={classes.toolbar} />
+            <div
+              className={classes.graphContainer}
+              ref="divGraph"
+              id="divGraph"
+            />
           </div>
 
           <Modal
