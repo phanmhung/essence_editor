@@ -1,54 +1,39 @@
+import {
+  mxClient, mxConnectionHandler,
+  mxConstants,
+  mxEvent, mxGraph, mxKeyHandler, mxPerimeter, mxRubberband, mxUndoManager, mxUtils
+} from 'mxgraph-js';
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import {
-  mxGraph,
-  mxRubberband,
-  mxKeyHandler,
-  mxUndoManager,
-  mxClient,
-  mxUtils,
-  mxPerimeter,
-  mxConnectionHandler,
-  mxConstants,
-  mxEvent,
-} from 'mxgraph-js';
-import Alpha from '../../Assets/EssenceKernel/Alpha.png';
 import ActivityPng from '../../Assets/EssenceKernel/Activity.png';
-import ActivitySpacePng from '../../Assets/EssenceKernel/Activity_Space.png';
-import CompetencyPng from '../../Assets/EssenceKernel/Competency.png';
-import WorkProductPng from '../../Assets/EssenceKernel/Work_Product.png';
-import AlphaEndeavorPng from '../../Assets/EssenceKernel/Alpha_Endeavor.png';
-import ActivityEndeavorPng from '../../Assets/EssenceKernel/Activity_Endeavor.png';
-import ActivitySpaceEndeavorPng from '../../Assets/EssenceKernel/Activity_Space_Endeavor.png';
-import CompetencyEndeavorPng from '../../Assets/EssenceKernel/Competency_Endeavor.png';
-import WorkProductEndeavorPng from '../../Assets/EssenceKernel/Work_Product_Endeavor.png';
-import AlphaCustomerPng from '../../Assets/EssenceKernel/Alpha_Customer.png';
 import ActivityCustomerPng from '../../Assets/EssenceKernel/Activity_Customer.png';
-import ActivitySpaceCustomerPng from '../../Assets/EssenceKernel/Activity_Space_Customer.png';
-import CompetencyCustomerPng from '../../Assets/EssenceKernel/Competency_Customer.png';
-import WorkProductCustomerPng from '../../Assets/EssenceKernel/Work_Product_Customer.png';
-import AlphaSolutionPng from '../../Assets/EssenceKernel/Alpha_Solution.png';
+import ActivityEndeavorPng from '../../Assets/EssenceKernel/Activity_Endeavor.png';
 import ActivitySolutionPng from '../../Assets/EssenceKernel/Activity_Solution.png';
+import ActivitySpacePng from '../../Assets/EssenceKernel/Activity_Space.png';
+import ActivitySpaceCustomerPng from '../../Assets/EssenceKernel/Activity_Space_Customer.png';
+import ActivitySpaceEndeavorPng from '../../Assets/EssenceKernel/Activity_Space_Endeavor.png';
 import ActivitySpaceSolutionPng from '../../Assets/EssenceKernel/Activity_Space_Solution.png';
+import Alpha from '../../Assets/EssenceKernel/Alpha.png';
+import AlphaCustomerPng from '../../Assets/EssenceKernel/Alpha_Customer.png';
+import AlphaEndeavorPng from '../../Assets/EssenceKernel/Alpha_Endeavor.png';
+import AlphaSolutionPng from '../../Assets/EssenceKernel/Alpha_Solution.png';
+import CompetencyPng from '../../Assets/EssenceKernel/Competency.png';
+import CompetencyCustomerPng from '../../Assets/EssenceKernel/Competency_Customer.png';
+import CompetencyEndeavorPng from '../../Assets/EssenceKernel/Competency_Endeavor.png';
 import CompetencySolutionPng from '../../Assets/EssenceKernel/Competency_Solution.png';
+import WorkProductPng from '../../Assets/EssenceKernel/Work_Product.png';
+import WorkProductCustomerPng from '../../Assets/EssenceKernel/Work_Product_Customer.png';
+import WorkProductEndeavorPng from '../../Assets/EssenceKernel/Work_Product_Endeavor.png';
 import WorkProductSolutionPng from '../../Assets/EssenceKernel/Work_Product_Solution.png';
 
-import KernelDetail from '../../Component/kernelDetail/KernelDetail';
-import Modal from '@material-ui/core/Modal/Modal';
 import {
-  Button,
-  AppBar,
-  Toolbar,
-  Drawer,
-  CssBaseline,
-  List,
-  ListItem,
-  Typography,
-  Link,
+  AppBar, Button, CssBaseline, Drawer, Link, List,
+  ListItem, Toolbar, withStyles
 } from '@material-ui/core';
+import Modal from '@material-ui/core/Modal/Modal';
 import axios from 'axios';
-import { withStyles } from '@material-ui/core';
 import Background from '../../Assets/paper-background.jpg';
+import KernelDetail from '../../Component/kernelDetail/KernelDetail';
 const CircularJSON = require('circular-json');
 
 const drawerWidth = 200;
@@ -75,6 +60,7 @@ const styles = (theme) => ({
   },
   graphContainer: {
     backgroundImage: `url(${Background})`,
+    height: "100vh"
   },
   toolbar: theme.mixins.toolbar,
   content: {
@@ -1455,18 +1441,17 @@ class Editor extends Component {
       return (
         <div className={classes.root}>
           <CssBaseline />
-          <AppBar position="fixed" className={classes.appBar}>
-            <Toolbar>
-              <Typography
-                variant="h6"
-                color="inherit"
-                noWrap
+          <AppBar  className={classes.appBar}>
+           
+            <Toolbar disableGutters>
+              <h1
+                
                 className={classes.logo}
               >
                 <Link href="/" color="inherit">
                   Essence editor
                 </Link>
-              </Typography>
+              </h1>
               <Button
                 variant="contained"
                 onClick={this.toJSON}
@@ -1482,6 +1467,7 @@ class Editor extends Component {
                 Save to DB
               </Button>
             </Toolbar>
+            
           </AppBar>
 
           <Drawer
