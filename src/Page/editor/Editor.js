@@ -1005,7 +1005,7 @@ class Editor extends Component {
             graph.getModel().remove(edge);
 
             alert(
-              'WorkProduct dan Activity Space tidak boleh saling terhubung'
+              'WorkProduct and Activity Space cannot be interconnected'
             );
           }
 
